@@ -1,0 +1,112 @@
+#include <stdlib.h>
+#include <iostream>
+#include <clocale>
+#include <vector>
+using namespace std;
+struct Node       //Структура являющаяся звеном списка
+ {
+     Node *Next,*Prev; //Указатели на адреса следующего и предыдущего элементов списка
+     int info;
+ };
+ class List   //Создаем тип данных Список
+ {
+     Node *Head,*Tail; //Указатели на адреса начала списка и его конца
+ public:
+     List()//Инициализируем адреса как пустые
+     {
+         Head = Tail = NULL;
+     }
+     
+     Node *five ()
+     {
+         if (Head == NULL) // если нет элементов
+             return NULL;
+
+         Node *temp = Head;
+
+         for (int i = 0; i<4; i++) {// переход на след элемент
+             if (temp->Next == NULL) // ее дальше ничего нет
+                 return NULL;
+             temp = temp->Next; // переходим
+         }
+         return temp;
+     }
+     
+     void l (Node* f, int h, int t){
+         if (f == NULL) {
+             return;
+         }
+         while (f->Prev !=NULL) { // ищем пустой элемент
+             f = f->Prev;
+         }
+         Node *temp = new Node; //Выделение памяти под новый элемент структуры
+         temp->Prev = NULL;  //Указываем, что изначально по следующему адресу пусто
+         temp->info = h;//Записываем значение в структуру
+         temp->Next = f;
+         f->Prev = temp;
+         
+         Head = temp; // начало
+         
+         while (f->Next != NULL) {
+             f = f->Next;
+         }
+        temp = new Node; //Выделение памяти под новый элемент структуры
+
+         temp->Next = NULL;
+         temp->info = t;
+         temp->Prev = f;
+         f->Next = temp;
+         
+         Tail = temp; // конец
+     }
+     
+    void addelementend(int info) // добавление в конец
+     {
+       Node *temp=new Node; //Выделение памяти под новый элемент структуры
+         temp->info=info;//Записываем значение в структуру
+         temp->Next=NULL;  //Указываем, что изначально по следующему адресу пусто
+         
+         if(Head != NULL && Tail != NULL) // если список не пустой
+         {
+            temp->Prev=Tail; //Указываем адрес на предыдущий элемент в соотв. поле
+            Tail->Next=temp; //Указываем адрес следующего за хвостом элемента
+         }
+       else //Если список пустой
+       {
+           temp->Prev = NULL;
+           Head = temp;
+       }
+    Tail=temp; //Меняем адрес хвоста
+
+     }
+     
+    
+void Show() //ВЫВОДИМ СПИСОК С НАЧАЛА
+ {
+     Node *temp=Head; //Временный указатель на адрес последнего элемента
+      while (temp!=NULL) //Пока не встретим пустое значение
+     {
+         cout<<temp->info<<" "; //Выводим каждое считанное значение на экран
+         temp=temp->Next; //Смена адреса на адрес следующего элемента
+     }
+ }
+ };
+
+
+int main (){
+    setlocale(LC_ALL,"rus");
+    List lst; //Объявляем переменную, тип которой есть список
+    int q[] = {1, 2, 3, 4, 5, 6, 7};
+    for (int i= 0; i < sizeof(q)/sizeof(q[0]) ; i++ )
+    {
+         lst.addelementend(q[i]);
+    }
+    cout << " Элементы списка:"  ;
+    lst.Show();
+   
+    cout  << "\n Добавление элементов: ";
+    lst.l(lst.five(), 100, 200);
+    lst.Show();
+    cout << endl;
+    return 0;
+     }
